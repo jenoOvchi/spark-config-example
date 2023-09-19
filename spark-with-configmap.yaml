@@ -1,0 +1,44 @@
+---
+apiVersion: "sparkoperator.k8s.io/v1beta2"
+kind: SparkApplication
+metadata:
+  name: "spark-with-configmap"
+  namespace: default
+spec:
+  type: Python
+  mode: cluster
+  pythonVersion: "3"
+  image: "gcr.io/spark-operator/spark-py:v3.1.1"
+  imagePullPolicy: Always
+  mainClass: org.apache.spark.examples.SparkPi
+  mainApplicationFile: local:///tmp/spark/pi.py
+  sparkVersion: "3.1.1"
+  restartPolicy:
+    type: OnFailure
+    onFailureRetries: 3
+    onFailureRetryInterval: 10
+    onSubmissionFailureRetries: 5
+    onSubmissionFailureRetryInterval: 20
+  driver:
+    cores: 1
+    coreLimit: "1200m"
+    memory: "512m"
+    labels:
+      version: 3.1.1
+    annotations:
+      sidecar.istio.io/inject: “false”
+    serviceAccount: spark
+    configMaps:
+      - name: demo-spark-job
+        path: /tmp/spark
+  executor:
+    cores: 1
+    instances: 1
+    memory: "512m"
+    labels:
+      version: 3.1.1
+    annotations:
+      sidecar.istio.io/inject: “false”
+    configMaps:
+      - name: demo-spark-job
+        path: /tmp/spark
