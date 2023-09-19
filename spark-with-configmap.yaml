@@ -10,7 +10,6 @@ spec:
   pythonVersion: "3"
   image: "gcr.io/spark-operator/spark-py:v3.1.1"
   imagePullPolicy: Always
-  mainClass: org.apache.spark.examples.SparkPi
   mainApplicationFile: local:///tmp/spark/pi.py
   sparkVersion: "3.1.1"
   restartPolicy:
